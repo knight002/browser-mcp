@@ -4,7 +4,12 @@ from mcp.server.fastmcp import FastMCP
 from browser_manager import browser_manager
 import tools
 
-mcp = FastMCP("Browser-Automation")
+# Initialize FastMCP server with network settings for remote access
+mcp = FastMCP(
+    "Browser-Automation", 
+    host="0.0.0.0", 
+    port=8000
+)
 
 @mcp.tool()
 async def setup_session(profile_name: str = "default", headless: bool = True) -> str:
@@ -51,5 +56,6 @@ async def screenshot() -> str:
     return f"Screenshot saved to {path}"
 
 if __name__ == "__main__":
-    asyncio.run(mcp.run())
+    # Run as an SSE server on port 8000 for remote access
+    mcp.run(transport="sse")
 

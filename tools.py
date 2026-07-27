@@ -5,10 +5,10 @@ from datetime import datetime
 from playwright.async_api import Page
 from browser_manager import browser_manager
 
-async def navigate(url: str) -> dict:
+async def navigate(url: str, wait_until: str = "domcontentloaded") -> dict:
     page = await browser_manager.get_page()
     try:
-        await page.goto(url, wait_until="networkidle")
+        await page.goto(url, wait_until=wait_until)
         title = await page.title()
         screenshot_path = await take_screenshot(page, f"nav_{int(datetime.now().timestamp())}")
         return {
