@@ -48,6 +48,14 @@ class BrowserManager:
     async def get_page(self) -> Page:
         if not self.initialized:
             raise RuntimeError("BrowserManager not initialized. Call initialize() first.")
+        if self.active_page.is_closed():
+            pages = self.context.pages
+            if pages:
+                self.active_page = pages[0]
+            else:
+                self.active_page = await self.context.new_page()
+            stealth = Stealth()
+            await stealth.apply_stealth_async(self.active_page)
         return self.active_page
 
     async def cleanup(self):

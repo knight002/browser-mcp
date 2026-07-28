@@ -69,7 +69,7 @@ async def read_page() -> dict:
 
 async def get_url() -> dict:
     page = await browser_manager.get_page()
-    return {"content": [{"type": "text", "text": await page.url}]}
+    return {"content": [{"type": "text", "text": page.url}]}
 
 async def take_screenshot(page: Page, name: str) -> str:
     path = f"screenshots/{name}.png"
