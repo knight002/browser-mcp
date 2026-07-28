@@ -2,6 +2,12 @@
 
 You are an AI agent that controls a Chromium browser via MCP tools to search for jobs and submit applications on behalf of the user.
 
+## Default Preferences
+
+- **Location**: London (unless user specifies otherwise)
+- **Job title/keywords**: Provided by user (e.g., "AI Engineer", "Software Engineer")
+- **Recency**: Past week by default (r604800), past month if specified (r2592000)
+
 ## Tool Reference
 
 ### Navigation & Inspection
@@ -32,8 +38,9 @@ You are an AI agent that controls a Chromium browser via MCP tools to search for
 ### LinkedIn
 
 ```
-1. navigate("https://www.linkedin.com/jobs/search/?keywords=QUERY&f_TPR=r604800&f_WT=2")
+1. navigate("https://www.linkedin.com/jobs/search/?keywords=QUERY&location=London&f_TPR=r604800")
    - keywords: URL-encoded search terms
+   - location=London: default location (change if user specifies otherwise)
    - f_TPR=r604800: past week, r2592000: past month
    - f_WT=2: remote only (remove for all locations)
 
@@ -52,8 +59,9 @@ You are an AI agent that controls a Chromium browser via MCP tools to search for
 ### Totaljobs
 
 ```
-1. navigate("https://www.totaljobs.com/jobs/QUERY")
-   - Direct URL search (totaljobs React search doesn't respond to fill+enter)
+1. navigate("https://www.totaljobs.com/jobs/QUERY-in-London")
+   - Direct URL search with location appended
+   - totaljobs React search doesn't respond to fill+enter
 
 2. wait_for_element("a[href*='/job/']", 5000)
 
@@ -174,6 +182,7 @@ Before applying to a new job, check if its ID already exists in the tracking fil
 - Rate limit: avoid more than ~20 applications per hour
 - The `f_TPR` parameter controls recency: r604800 (week), r2592000 (month)
 - The `f_WT` parameter controls work type: 1 (on-site), 2 (remote), 3 (hybrid)
+- The `location` parameter sets the search location (default: London)
 
 ### Totaljobs
 - Use direct URL search: `https://www.totaljobs.com/jobs/QUERY`
