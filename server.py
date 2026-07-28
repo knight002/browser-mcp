@@ -100,8 +100,37 @@ async def screenshot() -> str:
     path = await tools.take_screenshot(page, f"manual_{int(time.time())}")
     return f"Screenshot saved to {path}"
 
+@mcp.tool()
+@log_tool_call
+async def extract_jobs(site: str = "generic") -> str:
+    """Extract job listings from the current page as structured JSON. Supported sites: linkedin, totaljobs, generic."""
+    result = await tools.extract_jobs(site)
+    return result["content"][0]["text"]
+
+@mcp.tool()
+@log_tool_call
+async def scroll(direction: str = "down", amount: int = 500) -> str:
+    """Scroll the page up or down by a given amount in pixels."""
+    result = await tools.scroll(direction, amount)
+    return result["content"][0]["text"]
+
+@mcp.tool()
+@log_tool_call
+async def wait_for_element(selector: str, timeout: int = 5000) -> str:
+    """Wait for a CSS selector to appear on the page."""
+    result = await tools.wait_for_element(selector, timeout)
+    return result["content"][0]["text"]
+
+@mcp.tool()
+@log_tool_call
+async def fill_application(fields: str) -> str:
+    """Fill multiple form fields at once. Pass a JSON dict of {selector_or_label: value} pairs. Handles text inputs, dropdowns, and file uploads (for resume)."""
+    import json as _json
+    parsed = _json.loads(fields) if isinstance(fields, str) else fields
+    result = await tools.fill_application(parsed)
+    return result["content"][0]["text"]
+
 if __name__ == "__main__":
     logger.info("Browser MCP Server starting on port 8000")
-    # Run as an SSE server on port 8000 for remote access
     mcp.run(transport="sse")
 

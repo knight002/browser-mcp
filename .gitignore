@@ -4,3 +4,4 @@ screenshots/*.png
 screenshots/job_data.json
 server.log
 server.pid
+applied_jobs.json
