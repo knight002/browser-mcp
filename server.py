@@ -53,7 +53,9 @@ mcp = FastMCP(
 @mcp.tool()
 @log_tool_call
 async def setup_session(profile_name: str = "default", headless: bool = True) -> str:
-    """Initializes the browser session with a specific profile."""
+    """Initializes the browser session with a specific profile. Idempotent: safe to call repeatedly."""
+    if browser_manager.initialized:
+        return f"Session already active, continuing with existing session."
     await browser_manager.initialize()
     return f"Browser initialized with profile {profile_name} (headless={headless})."
 
