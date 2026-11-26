@@ -41,6 +41,11 @@ CHROME_ARGS="--remote-debugging-port=9222 --user-data-dir=/tmp/profile" ./servic
 If Chromium is already running with CDP on the expected port, the script detects
 it and will not launch a duplicate.
 
+**Self-healing:** the `setup_session` tool also starts Chromium on demand. If the
+CDP endpoint is unreachable when an agent calls `setup_session` (e.g. the browser
+was closed or never started), the server launches it automatically and connects.
+So `./service.sh start` starting the browser is a convenience, not a requirement.
+
 ## 🛠 Available Tools for Agents
 
 Once connected, the agent has access to the following tools:
