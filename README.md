@@ -16,24 +16,30 @@ This service acts as a bridge between an AI agent and a live browser. Instead of
 
 ## ⚙️ Setup & Installation
 
-### 1. Launch Chromium with Remote Debugging
-The browser must be started with a debugging port enabled.
-```bash
-chromium --remote-debugging-port=9222 --remote-debugging-address=0.0.0.0
-```
-
-### 2. Network Bridging (For Docker/Remote Users)
-If the MCP server is running in a container or on another machine, use `socat` to bridge the connection to Chromium's local port:
-```bash
-socat TCP-LISTEN:9223,fork,reuseaddr TCP:127.0.0.1:9222
-```
-
-### 3. Run the Server
-The server is managed via a helper script:
+### 1. Run the Server (starts Chromium too)
+The server is managed via a helper script. `start` launches Chromium with
+remote debugging enabled (CDP on port 9222) and then starts the MCP server:
 ```bash
 chmod +x service.sh
 ./service.sh start
 ```
+
+The browser can also be managed independently:
+```bash
+./service.sh browser start    # launch Chromium with CDP on port 9222
+./service.sh browser stop     # stop the managed Chromium
+./service.sh browser status   # check browser/CDP state
+./service.sh status           # shows both server and browser state
+```
+
+Options can be overridden via environment variables:
+```bash
+CDP_PORT=9333 BROWSER_BIN=/usr/bin/chromium ./service.sh browser start
+CHROME_ARGS="--remote-debugging-port=9222 --user-data-dir=/tmp/profile" ./service.sh browser start
+```
+
+If Chromium is already running with CDP on the expected port, the script detects
+it and will not launch a duplicate.
 
 ## 🛠 Available Tools for Agents
 

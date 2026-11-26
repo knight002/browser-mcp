@@ -6,4 +6,6 @@ screenshots/*.png
 screenshots/job_data.json
 server.log
 server.pid
+browser.log
+browser.pid
 applied_jobs.json
