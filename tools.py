@@ -24,11 +24,14 @@ async def navigate(url: str, wait_until: str = "domcontentloaded") -> dict:
 async def click(selector: str) -> dict:
     page = await browser_manager.get_page()
     try:
-        # Try text-based selector first for AI friendliness
-        if not selector.startswith(("#", ".", "[", "div", "span", "a")):
-            await page.click(f"text={selector}", timeout=5000)
-        else:
+        # Try the selector as-is (CSS/Playwright selector) first, then fall back to a
+        # plain-text match. This keeps bare words ("London", "Search") working while
+        # also supporting selectors like button[data-at='x'] that the old
+        # first-character sniffing misclassified as text.
+        try:
             await page.click(selector, timeout=5000)
+        except Exception:
+            await page.click(f"text={selector}", timeout=5000)
         
         screenshot_path = await take_screenshot(page, f"click_{int(datetime.now().timestamp())}")
         return {
@@ -44,13 +47,14 @@ async def click(selector: str) -> dict:
 async def type_text(selector: str, text: str) -> dict:
     page = await browser_manager.get_page()
     try:
-        if not selector.startswith(("#", ".", "[", "div", "span", "a")):
-            sel = f"text={selector}" # This is tricky for typing, usually need a proper selector
-            # Fallback to simplified text search if it's just a label that might be near an input
-            await page.fill(selector, text) 
-        else:
-            await page.fill(selector, text)
-        
+        # Try the selector as a CSS/Playwright selector first, then fall back to an
+        # accessible-label match (bare word like "Email"). The old first-character
+        # sniffing misread selectors like button[...] as plain text.
+        try:
+            await page.fill(selector, text, timeout=5000)
+        except Exception:
+            await page.get_by_label(selector).first.fill(text, timeout=5000)
+
         return {"content": [{"type": "text", "text": f"Typed '{text}' into {selector}."}]}
     except Exception as e:
         await save_debug_state(page, f"type_error_{int(datetime.now().timestamp())}")
@@ -201,7 +205,7 @@ async def wait_for_element(selector: str, timeout: int = 5000) -> dict:
     page = await browser_manager.get_page()
     try:
         await page.wait_for_selector(selector, timeout=timeout)
-        count = await page.evaluate(f"document.querySelectorAll('{selector}').length")
+        count = await page.locator(selector).count()
         return {"content": [{"type": "text", "text": f"Element '{selector}' found. {count} matching element(s) on page."}]}
     except Exception as e:
         return {"content": [{"type": "text", "text": f"Timeout waiting for '{selector}' after {timeout}ms: {str(e)}"}]}
