@@ -121,27 +121,34 @@ EXTRACT_JOBS_JS = {
     "totaljobs": """() => {
         const results = [];
         const seen = new Set();
-        const links = document.querySelectorAll('a[href*="/job/"]');
-        links.forEach(link => {
+        const titles = document.querySelectorAll('[data-at="job-item-title"], [data-testid="job-item-title"]');
+        titles.forEach(el => {
+            const link = el.tagName === 'A' ? el : el.closest('a');
+            if (!link) return;
             const href = link.href;
-            const idMatch = href.match(/job(\\d+)$/);
+            const idMatch = href.match(/job(\\d+)/);
             const jobId = idMatch ? idMatch[1] : href;
-            if (!seen.has(jobId)) {
-                seen.add(jobId);
-                const container = link.closest('[class]');
-                const text = container ? container.textContent.trim() : link.textContent.trim();
-                const title = link.textContent.trim().split('\\n')[0];
-                results.push({
-                    id: jobId,
-                    title: title || 'N/A',
-                    company: 'N/A',
-                    url: href.split('?')[0],
-                    location: 'N/A',
-                    salary: 'N/A',
-                    raw_text: text.substring(0, 300),
-                    source: 'totaljobs'
-                });
+            if (seen.has(jobId)) return;
+            seen.add(jobId);
+            // Climb to the card container that also holds company/location/salary
+            let card = el.parentElement;
+            let guard = 0;
+            while (card && !card.querySelector('[data-at="job-item-company-name"]') && guard++ < 6) {
+                card = card.parentElement;
             }
+            const q = sel => card ? (card.querySelector(sel) || null) : null;
+            const clean = e => e ? e.textContent.replace(/\\s+/g, ' ').trim() : 'N/A';
+            const descEl = q('[data-at="jobcard-content"]');
+            results.push({
+                id: jobId,
+                title: (el.textContent || '').replace(/\\s+/g, ' ').trim() || 'N/A',
+                company: clean(q('[data-at="job-item-company-name"]')),
+                url: href.split('?')[0],
+                location: clean(q('[data-at="job-item-location"]')),
+                salary: clean(q('[data-at="job-item-salary-info"]')),
+                description: descEl ? descEl.textContent.replace(/\\s+/g, ' ').trim().substring(0, 300) : 'N/A',
+                source: 'totaljobs'
+            });
         });
         return results;
     }""",
