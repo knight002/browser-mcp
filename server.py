@@ -134,5 +134,5 @@ async def fill_application(fields: str) -> str:
 
 if __name__ == "__main__":
     logger.info("Browser MCP Server starting on port 8000")
-    mcp.run(transport="sse")
+    mcp.run(transport="streamable-http")
 

@@ -1,6 +1,6 @@
 # TODO: Migrate browser-mcp from legacy SSE transport to Streamable HTTP
 
-**Status:** OPEN — must be done on the machine running the server (192.168.0.10)
+**Status:** DONE (server side, 2026-11-26) — server migrated to Streamable HTTP at `/mcp`, verified with curl. Remaining: update OpenCode client config on 192.168.0.74 (step 4) and confirm with `opencode mcp list`.
 **Created:** 2026-11-26
 **Priority:** High — OpenCode currently cannot connect at all
 

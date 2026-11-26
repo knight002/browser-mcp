@@ -12,7 +12,7 @@ This service acts as a bridge between an AI agent and a live browser. Instead of
 
 ## 🛠 Architecture
 
-`Agent` $\rightarrow$ `MCP Client` $\rightarrow$ `Browser MCP Server (SSE)` $\rightarrow$ `CDP Bridge/Proxy` $\rightarrow$ `Running Chromium`
+`Agent` $\rightarrow$ `MCP Client` $\rightarrow$ `Browser MCP Server (Streamable HTTP)` $\rightarrow$ `CDP Bridge/Proxy` $\rightarrow$ `Running Chromium`
 
 ## ⚙️ Setup & Installation
 
@@ -52,10 +52,10 @@ Once connected, the agent has access to the following tools:
 
 - `browser_manager.py`: Handles the CDP connection and browser state.
 - `tools.py`: Implementation of high-level browser actions.
-- `server.py`: The FastMCP server implementing SSE transport on port 8000.
+- `server.py`: The FastMCP server implementing Streamable HTTP transport on port 8000.
 - `service.sh`: Management script for start/stop/restart operations.
 - `screenshots/`: Directory where session images are saved.
 
 ## 🌐 Remote Access
-The server binds to `0.0.0.0:8000`. Remote clients can connect via the SSE endpoint:
-`http://<host-ip>:8000/sse`
+The server binds to `0.0.0.0:8000`. Remote clients can connect via the Streamable HTTP endpoint:
+`http://<host-ip>:8000/mcp`
