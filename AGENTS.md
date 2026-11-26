@@ -33,7 +33,7 @@ The `Edit` tool requires an **exact string match** of the text to replace. Follo
 ## Mandatory Verification Protocol
 Before marking any task as "completed", the agent MUST:
 1. **Programmatic Proof**: Write and run a standalone Python script or CURL command that proves the logic works against real world samples (e.g., specific message IDs).
-2. **Log Audit**: Restart the server and tail `/tmp/voice-chat.log` to confirm no `500 Internal Server Error` or `UnboundLocalError` occurs during the first execution of the new feature.
+2. **Log Audit**: Restart the server (`./service.sh restart`) and tail `server.log` to confirm no errors occur during the first execution of the new feature.
 3. **Regression Check**: Verify that new changes didn't break existing core functionality (e.g., if adding a math symbol, ensure arrows still work).
 4. **Evidence**: Provide the output of these tests in the final response.
 

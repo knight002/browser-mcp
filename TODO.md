@@ -121,12 +121,10 @@ opencode mcp list
 
 ## Notes
 
-- The server currently reports `protocolVersion: 2024-11-05` in its
-  initialize response. That is fine — OpenCode's default `legacy` protocol
-  mode speaks revisions up to 2025-11-25 and negotiates down. No protocol
-  change is required, only the transport.
+- The server reports `protocolVersion: 2025-03-26` in its initialize response
+  (negotiated with clients that request it). No further protocol change
+  is required — only the transport migration was needed.
 - Keep `host="0.0.0.0"` so the server remains reachable from other machines
   on the LAN (it is intentionally a LAN service).
-- `README.md` still documents the SSE architecture
-  (`Browser MCP Server (SSE)`, `http://<host-ip>:8000/sse`) — update it to
-  Streamable HTTP / `http://<host-ip>:8000/mcp` when making this change.
+- `README.md` has been updated to document the Streamable HTTP architecture
+  (`http://<host-ip>:8000/mcp`). Done.

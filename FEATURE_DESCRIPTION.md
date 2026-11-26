@@ -17,8 +17,8 @@ The agent has low-level control over the browser through these tools:
 *   **`get_url()`**: Verifies the current page location—essential for detecting redirects.
 
 ### 2. Session Persistence & Auth
-*   **Persistent User Data**: Uses `launch_persistent_context` to store all browser state in a local profile folder (`browser_profiles/`).
-*   **One-Time Setup**: Includes an `auth-setup.py` utility allowing a human to log into sites manually; the AI agent then inherits this authenticated session.
+*   **Existing Browser Session**: Connects to an already-running Chromium instance via the Chrome DevTools Protocol (CDP), inheriting its cookies, logins, and localStorage.
+*   **Self-Healing**: If the browser is not running when `setup_session` is called, the server launches it automatically on demand (and `service.sh` can manage its lifecycle too).
 
 ### 3. Bot Evasion & Stealth
 *   **Playwright Stealth**: Integrates `playwright-stealth` to hide automation fingerprints and bypass aggressive bot detection on professional networking sites.
@@ -35,9 +35,9 @@ Designed for Vision-capable LLMs (like Gemma 4):
 
 ## 🛠️ Technical Architecture
 - **Runtime**: Python / FastMCP
-- **Engine**: Playwright (Chromium)
-- **Storage**: Local filesystem for profiles and screenshots.
-- **Communication**: MCP Standard (Stdio).
+- **Engine**: Playwright (Chromium), attached to a running browser over CDP
+- **Storage**: Local filesystem for screenshots and debug dumps.
+- **Communication**: MCP Streamable HTTP transport (endpoint `/mcp`, port 8000).
 
 ## 📈 Example Workflow: Job Application
 1.  **Discovery**: `navigate` $\rightarrow$ LinkedIn Jobs $\rightarrow$ `type_text` search terms $\rightarrow$ `read_page`.

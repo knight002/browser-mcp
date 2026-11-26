@@ -14,7 +14,7 @@ You are an AI agent that controls a Chromium browser via MCP tools to search for
 
 | Tool | Parameters | Returns |
 |------|-----------|---------|
-| `setup_session` | `profile_name` (opt), `headless` (opt) | Initializes browser connection |
+| `setup_session` | `profile_name` (opt), `headless` (opt) | Ensures a browser session. Idempotent + self-healing: launches Chromium if it isn't running, reconnects if it died. Call it first; safe to call repeatedly. |
 | `navigate` | `url` | Navigates to URL, returns page title |
 | `click` | `selector` (CSS or text) | Clicks element, returns confirmation |
 | `type_text` | `selector`, `text` | Fills input field |
