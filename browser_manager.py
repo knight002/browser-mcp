@@ -12,7 +12,7 @@ class BrowserManager:
             cls._instance.initialized = False
         return cls._instance
 
-    async def initialize(self, endpoint="http://172.24.0.1:9223"):
+    async def initialize(self, endpoint="http://127.0.0.1:9222"):
         if self.initialized:
             return
 

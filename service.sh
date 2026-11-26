@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Configuration
-APP_DIR="/workspace/browser_mcp"
+APP_DIR="/home/m247/workspace/browser_mcp"
 PYTHON_BIN="$APP_DIR/venv/bin/python"
 SERVER_SCRIPT="$APP_DIR/server.py"
 PID_FILE="$APP_DIR/server.pid"

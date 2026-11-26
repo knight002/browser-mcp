@@ -1,5 +1,7 @@
 venv/
+venv.old-3.12/
 __pycache__/
+debug/
 screenshots/*.png
 screenshots/job_data.json
 server.log
